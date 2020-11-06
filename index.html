@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试工具集</title>
+</head>
+<style>
+    ul,li{
+        list-style-type: none;
+    }
+    li *{
+        margin-right:10px;
+    }
+    .title{
+        font-size: 20px;
+        font-weight: bold;
+
+    }
+</style>
+<body >
+<ul id="app">
+    <li>
+        <p class="title">金钱格式化(formatMoney) 参数: 金额[整型或浮点型]</p>
+        <p><span>数据: {{money}}</span><b>处理后:{{tools.formatMoney(money)}}</b></p>
+    </li>
+    <li>
+        <p class="title">加密身份证或者名字(secretInfo), 参数1: 身份证数据或名字数据;参数2: 加密类型(0 = 身份证号, 1 = 名字) 默认0</p>
+        <p><span>id数据: {{info.id}}</span><b>处理后:{{tools.secretInfo(info.id,0)}}</b></p>
+        <p><span>名字数据: {{info.name}}</span><b>处理后:{{tools.secretInfo(info.name,1)}}</b></p>
+    </li>
+    <li>
+        <p class="title">输入框内容类型检测(checkInput)  参数1: 类型, 参数2: 检测数据</p>
+        <p><span>类型"number"数据: 16546513</span><b>处理后:{{tools.checkInput("number",16546513)}}</b></p>
+        <p><span>类型"number"数据: 15613245as</span><b>处理后:{{tools.checkInput("number","15613245as")}}</b></p>
+        <p><span>类型"phone"数据: 13355252188</span><b>处理后:{{tools.checkInput("phone",13355252188)}}</b></p>
+        <p><span>类型"phone"数据: 14111111111</span><b>处理后:{{tools.checkInput("phone",14111111111)}}</b></p>
+        <p>*********************后面不举反例了********************************</p>
+        <p><span>类型"email"数据: 123456789@qq.com</span><b>处理后:{{tools.checkInput("email","123456789@qq.com")}}</b></p>
+        <p><span>类型"bank"数据: 123456789123456789</span><b>处理后:{{tools.checkInput("bank","12345678912345678")}}</b></p>
+        <p><span>类型"id"数据: 513011556485135248</span><b>处理后:{{tools.checkInput("id",513011556485135248)}}</b></p>
+        <p><span>类型"qq"数据: 123456</span><b>处理后:{{tools.checkInput("qq","123456")}}</b></p>
+    </li>
+    <li>
+        <p class="title">倒计时(count_down) 参数1: 毫秒数 参数2: 回调函数</p>
+        <p><span>数据: 10010000</span><b>处理后:{{count_down}}</b></p>
+    </li>
+    <li id="in">
+        <p class="title">是否在窗口中(inWindow) dom: 要查询的dom元素</p>
+        <p><span>数据: 本dom元素</span><b>处理后:{{inWindow}}</b></p>
+    </li>
+
+</ul>
+<script type="text/javascript" src="./js/tool.js"></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/vue/2.5.2/vue.min.js"></script>
+<script type="text/javascript">
+let vm = new Vue({
+    el:"#app",
+    data:{
+        tools:new Tools(),
+        money:125,
+        info:{
+            id:513011556485135248,
+            name:"王大锤"
+        },
+        count_down:null,
+        inWindow:false
+    },
+    mounted(){
+        let $this = this;
+        this.count();
+        window.onscroll = function(){
+            let dom = document.getElementById("in");
+            let inwindow = $this.tools.inWindow(dom);
+            console.log(inwindow);
+            $this.inWindow = $this.tools.inWindow(inwindow);
+        }
+    },
+    methods:{
+        count(){
+            let $this = this;
+            this.tools.count_down(10010000,function(timer,format){
+                $this.count_down = format[0]+":"+format[1]+":"+format[2]
+            })
+        }
+    }
+})
+</script>
+</body>
+</html>
